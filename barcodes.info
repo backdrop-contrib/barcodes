@@ -1,0 +1,5 @@
+name = Barcodes
+description = Generate barcodes
+version = VERSION
+core = 7.x
+dependencies[] = xautoload

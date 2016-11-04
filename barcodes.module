@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * @file
+ * Contains barcodes.module.
+ */
+
+/**
+ * Implements hook_xautoload().
+ */
+function barcodes_xautoload($adapter) {
+  // Scan sites/all/vendor/composer for Composer-generated autoload files, e.g.
+  // 'sites/all/vendor/composer/autoload_namespaces.php', etc.
+  $composerdir = drupal_get_path('module', 'barcodes') . '/vendor/composer';
+  $adapter->absolute()->composerDir($composerdir);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function rsc_barcodes_theme($existing, $type, $theme, $path) {
+  $items = array();
+  $generator = new \Com\Tecnick\Barcode\Barcode();
+
+  $barcode = array(
+    'variables' => array(
+      'svg' => NULL,
+      'type' => NULL,
+      'value' => NULL,
+      'width' => NULL,
+      'height' => NULL,
+      'color' => NULL,
+      'background_color' => NULL,
+      'padding_top' => NULL,
+      'padding_right' => NULL,
+      'padding_bottom' => NULL,
+      'padding_left' => NULL,
+      'show_value' => NULL,
+    ),
+    'preprocess functions' => array('barcodes_preprocess_barcode'),
+  );
+  $items['barcode'] = $barcode;
+  foreach ($generator->getTypes() as $type) {
+    $barcode['template'] = 'templates/barcode';
+    $items['barcode__' . strtolower($type)] = $barcode;
+  }
+
+  return $items;
+}
+
+/**
+ * Custom preprocess function.
+ */
+function barcodes_preprocess_barcode(&$variables) {
+  // Instantiate the barcode class.
+  $barcode = new \Com\Tecnick\Barcode\Barcode();
+
+  // Generate a barcode.
+  $bobj = $barcode->getBarcodeObj(
+    // Barcode type and additional comma-separated parameters.
+    $variables['type'],
+    // Data string to encode.
+    $variables['value'],
+    // Bar height (use absolute or negative value as multiplication factor).
+    $variables['height'],
+    // Bar width (use absolute or negative value as multiplication factor).
+    $variables['width'],
+    // Foreground color.
+    $variables['color'],
+    // Padding (use absolute or negative values as multiplication factors).
+    array(-2, -2, -2, -2)
+    // Background color.
+    )->setBackgroundColor($variables['background_color']);
+
+  // Output the barcode as format (see other output formats
+  // in the documentation and examples).
+  // TODO return other format available.
+  return $bobj->getPng();
+
+}

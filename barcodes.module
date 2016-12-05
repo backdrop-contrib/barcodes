@@ -5,23 +5,404 @@
  * Contains barcodes.module.
  */
 
+use Com\Tecnick\Barcode\Barcode as BarcodeGenerator;
+
 /**
- * Implements hook_xautoload().
+ * Implements hook_block_info().
  */
-function barcodes_xautoload($adapter) {
-  // Scan sites/all/vendor/composer for Composer-generated autoload files, e.g.
-  // 'sites/all/vendor/composer/autoload_namespaces.php', etc.
-  $composerdir = drupal_get_path('module', 'barcodes') . '/vendor/composer';
-  $adapter->absolute()->composerDir($composerdir);
+function barcodes_block_info() {
+  $blocks['barcode'] = array(
+    'info' => t('Barcode'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function barcodes_block_configure($delta = '') {
+  $form = array();
+  if ($delta === 'barcode') {
+    $generator = new BarcodeGenerator();
+    $form['settings'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Barcode settings'),
+    );
+    $form['settings']['value'] = [
+      '#type' => 'textfield',
+      '#title' => t('Value'),
+      '#description' => t('The Barcode value.'),
+      '#default_value' => variable_get('barcodes_value', ''),
+      '#element_validate' => array('token_element_validate'),
+      '#token_types' => array(),
+    ];
+    if (module_exists('token')) {
+      $form['settings']['token_help'] = [
+        '#theme' => 'token_tree_link',
+        '#token_types' => [],
+      ];
+    }
+    $form['settings']['type'] = [
+      '#type' => 'select',
+      '#title' => t('Barcode Type'),
+      '#description' => t('The Barcode type.'),
+      '#options' => array_combine($generator->getTypes(), $generator->getTypes()),
+      '#default_value' => variable_get('barcodes_type', 'QRCODE'),
+    ];
+    $form['settings']['color'] = [
+      '#type' => 'textfield',
+      '#title' => t('Color'),
+      '#default_value' => variable_get('barcodes_color', '#000000'),
+      '#description' => t('The color code.'),
+    ];
+    $form['settings']['height'] = [
+      '#type' => 'textfield',
+      '#title' => t('Height'),
+      '#size' => 10,
+      '#default_value' => variable_get('barcodes_height', 100),
+      '#description' => t('The height in pixels.'),
+    ];
+    $form['settings']['width'] = [
+      '#type' => 'textfield',
+      '#title' => t('Width'),
+      '#size' => 10,
+      '#default_value' => variable_get('barcodes_width', 100),
+      '#description' => t('The width in pixels'),
+    ];
+    $form['settings']['padding_top'] = [
+      '#type' => 'textfield',
+      '#title' => t('Padding-Top'),
+      '#size' => 4,
+      '#maxlength' => 4,
+      '#default_value' => variable_get('barcodes_padding_top', 0),
+      '#description' => t('The top padding in pixels'),
+    ];
+    $form['settings']['padding_right'] = [
+      '#type' => 'textfield',
+      '#title' => t('Padding-Right'),
+      '#size' => 4,
+      '#maxlength' => 4,
+      '#default_value' => variable_get('barcodes_padding_right', 0),
+      '#description' => t('The right padding in pixels'),
+    ];
+    $form['settings']['padding_bottom'] = [
+      '#type' => 'textfield',
+      '#title' => t('Padding-Bottom'),
+      '#size' => 4,
+      '#maxlength' => 4,
+      '#default_value' => variable_get('barcodes_padding_bottom', 0),
+      '#description' => t('The bottom padding in pixels'),
+    ];
+    $form['settings']['padding_left'] = [
+      '#type' => 'textfield',
+      '#title' => t('Padding-Left'),
+      '#size' => 4,
+      '#maxlength' => 4,
+      '#default_value' => variable_get('barcodes_padding_left', 0),
+      '#description' => t('The left padding in pixels'),
+    ];
+    $form['settings']['show_value'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Show value'),
+      '#default_value' => variable_get('barcodes_show_value', FALSE),
+      '#description' => t('Show the actual value in addition to the barcode'),
+    ];
+  }
+  return $form;
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function barcodes_block_save($delta = '', $edit = array()) {
+  if ($delta == 'barcode') {
+    variable_set('barcodes_value', $edit['value']);
+    variable_set('barcodes_type', $edit['type']);
+    variable_set('barcodes_color', $edit['color']);
+    variable_set('barcodes_height', $edit['height']);
+    variable_set('barcodes_width', $edit['width']);
+    variable_set('barcodes_padding_top', $edit['padding_top']);
+    variable_set('barcodes_padding_right', $edit['padding_right']);
+    variable_set('barcodes_padding_bottom', $edit['padding_bottom']);
+    variable_set('barcodes_padding_left', $edit['padding_left']);
+    variable_set('barcodes_show_value', $edit['show_value']);
+  }
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function barcodes_block_view($delta = '') {
+  // This example is adapted from node.module.
+  $block = array();
+
+  switch ($delta) {
+    case 'barcode':
+      $block['subject'] = t('Barcode');
+      $generator = new BarcodeGenerator();
+      $suffix = str_replace(
+        '+', 'plus', strtolower(variable_get('barcodes_type', 'QRCODE'))
+      );
+      $value = variable_get('barcodes_value', '');
+      if (module_exists('token')) {
+        $value = token_replace($value);
+      }
+      $block['content'] = array(
+        '#theme' => 'barcode__' . $suffix,
+        '#attached' => array(
+          'css' => array(
+            drupal_get_path('module', 'barcodes') . '/css/' . $suffix . '.css',
+          ),
+        ),
+        '#type' => variable_get('barcodes_type', 'QRCODE'),
+        '#value' => check_plain($value),
+        '#width' => variable_get('barcodes_width', 100),
+        '#height' => variable_get('barcodes_height', 100),
+        '#color' => variable_get('barcodes_color', '#000000'),
+        '#padding_top' => variable_get('barcodes_padding_top', 0),
+        '#padding_right' => variable_get('barcodes_padding_right', 0),
+        '#padding_bottom' => variable_get('barcodes_padding_bottom', 0),
+        '#padding_left' => variable_get('barcodes_padding_left', 0),
+        '#show_value' => variable_get('barcodes_show_value', FALSE),
+      );
+
+      try {
+        $barcode = $generator->getBarcodeObj(
+          variable_get('barcodes_type', 'QRCODE'),
+          $value,
+          variable_get('barcodes_width', 100),
+          variable_get('barcodes_height', 100),
+          variable_get('barcodes_color', '#000000'),
+          array(
+            variable_get('barcodes_padding_top', 0),
+            variable_get('barcodes_padding_right', 0),
+            variable_get('barcodes_padding_bottom', 0),
+            variable_get('barcodes_padding_left', 0),
+          )
+        );
+        $block['content']['#svg'] = $barcode->getSvgCode();
+      }
+      catch (\Exception $e) {
+        watchdog(
+          'barcodes',
+          'Error: @error, given: @value',
+          array(
+            '@error' => $e->getMessage(),
+            '@value' => $value,
+          )
+        );
+      }
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function barcodes_field_formatter_info() {
+  return array(
+    'barcode' => array(
+      'label' => t('Barcode'),
+      'description' => t('Render the value as barcode.'),
+      'field types' => array(
+        'email',
+        'link_field',
+        'number_integer',
+        'string',
+        'phone',
+        'text',
+        'text_long',
+      ),
+      'settings' => array(
+        'type' => 'QRCODE',
+        'color' => '#000000',
+        'height' => 100,
+        'width' => 100,
+        'padding_top' => 0,
+        'padding_right' => 0,
+        'padding_bottom' => 0,
+        'padding_left' => 0,
+        'show_value' => FALSE,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function barcodes_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $elements = array();
+  $elements['#tree'] = TRUE;
+  if ($display['type'] == 'barcode') {
+    $generator = new BarcodeGenerator();
+    $elements['type'] = [
+      '#type' => 'select',
+      '#title' => t('Barcode Type'),
+      '#description' => t('The Barcode type.'),
+      '#options' => array_combine($generator->getTypes(), $generator->getTypes()),
+      '#default_value' => $settings['type'],
+    ];
+    $elements['color'] = [
+      '#type' => 'textfield',
+      '#title' => t('Color'),
+      '#default_value' => $settings['color'],
+      '#description' => t('The color code.'),
+    ];
+    $elements['height'] = [
+      '#type' => 'textfield',
+      '#title' => t('Height'),
+      '#size' => 10,
+      '#default_value' => $settings['height'],
+      '#description' => t('The height in pixels.'),
+    ];
+    $elements['width'] = [
+      '#type' => 'textfield',
+      '#title' => t('Width'),
+      '#size' => 10,
+      '#default_value' => $settings['width'],
+      '#description' => t('The width in pixels'),
+    ];
+    $elements['padding_top'] = [
+      '#type' => 'textfield',
+      '#title' => t('Padding-Top'),
+      '#size' => 4,
+      '#maxlength' => 4,
+      '#default_value' => $settings['padding_top'],
+      '#description' => t('The top padding in pixels'),
+    ];
+    $elements['padding_right'] = [
+      '#type' => 'textfield',
+      '#title' => t('Padding-Right'),
+      '#size' => 4,
+      '#maxlength' => 4,
+      '#default_value' => $settings['padding_right'],
+      '#description' => t('The right padding in pixels'),
+    ];
+    $elements['padding_bottom'] = [
+      '#type' => 'textfield',
+      '#title' => t('Padding-Bottom'),
+      '#size' => 4,
+      '#maxlength' => 4,
+      '#default_value' => $settings['padding_bottom'],
+      '#description' => t('The bottom padding in pixels'),
+    ];
+    $elements['padding_left'] = [
+      '#type' => 'textfield',
+      '#title' => t('Padding-Left'),
+      '#size' => 4,
+      '#maxlength' => 4,
+      '#default_value' => $settings['padding_left'],
+      '#description' => t('The left padding in pixels'),
+    ];
+    $elements['show_value'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Show value'),
+      '#default_value' => $settings['show_value'],
+      '#description' => t('Show the actual value in addition to the barcode'),
+    ];
+  }
+  return $elements;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function barcodes_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $summary = '';
+  if ($display['type'] === 'barcode') {
+    $summary = t(
+      'Type: @type',
+      array(
+        '@type' => isset($settings['type']) ? $settings['type'] : t('none'),
+      )
+    );
+  }
+  return $summary;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function barcodes_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $elements = array();
+  $settings = $display['settings'];
+
+  switch ($display['type']) {
+    case 'barcode':
+      $generator = new BarcodeGenerator();
+      foreach ($items as $delta => $item) {
+        $suffix = str_replace(
+          '+', 'plus', strtolower($settings['type'])
+        );
+        $value = $item['value'];
+        if (module_exists('token')) {
+          $value = token_replace($value);
+        }
+        $elements[$delta] = array(
+          '#theme' => 'barcode__' . $suffix,
+          '#attached' => array(
+            'library' => array(
+              'barcodes/' . $suffix,
+            ),
+          ),
+          '#type' => $settings['type'],
+          '#value' => check_plain($value),
+          '#width' => $settings['width'],
+          '#height' => $settings['height'],
+          '#color' => $settings['color'],
+          '#padding_top' => $settings['padding_top'],
+          '#padding_right' => $settings['padding_right'],
+          '#padding_bottom' => $settings['padding_bottom'],
+          '#padding_left' => $settings['padding_left'],
+          '#show_value' => $settings['show_value'],
+        );
+
+        try {
+          $barcode = $generator->getBarcodeObj(
+            $settings['type'],
+            $value,
+            $settings['width'],
+            $settings['height'],
+            $settings['color'],
+            array(
+              $settings['padding_top'],
+              $settings['padding_right'],
+              $settings['padding_bottom'],
+              $settings['padding_left'],
+            )
+          );
+          $elements[$delta]['#svg'] = $barcode->getSvgCode();
+        }
+        catch (\Exception $e) {
+          watchdog(
+            'barcodes',
+            'Error: @error, given: @value',
+            array(
+              '@error' => $e->getMessage(),
+              '@value' => $value,
+            )
+          );
+        }
+      }
+      break;
+  }
+  return $elements;
 }
 
 /**
  * Implements hook_theme().
  */
-function rsc_barcodes_theme($existing, $type, $theme, $path) {
-  $items = array();
-  $generator = new \Com\Tecnick\Barcode\Barcode();
-
+function barcodes_theme($existing, $type, $theme, $path) {
+  $generator = new BarcodeGenerator();
   $barcode = array(
     'variables' => array(
       'svg' => NULL,
@@ -30,51 +411,24 @@ function rsc_barcodes_theme($existing, $type, $theme, $path) {
       'width' => NULL,
       'height' => NULL,
       'color' => NULL,
-      'background_color' => NULL,
       'padding_top' => NULL,
       'padding_right' => NULL,
       'padding_bottom' => NULL,
       'padding_left' => NULL,
       'show_value' => NULL,
     ),
-    'preprocess functions' => array('barcodes_preprocess_barcode'),
   );
+  $items = array();
   $items['barcode'] = $barcode;
+  $items['barcode']['template'] = 'barcode';
+  $items['barcode']['path'] = drupal_get_path('module', 'barcodes') . '/templates';
   foreach ($generator->getTypes() as $type) {
-    $barcode['template'] = 'templates/barcode';
+    $suffix = str_replace(
+      '+', 'plus', strtolower($type)
+    );
     $items['barcode__' . strtolower($type)] = $barcode;
+    $items['barcode__' . strtolower($type)]['template'] = 'barcode--' . $suffix;
+    $items['barcode__' . strtolower($type)]['path'] = drupal_get_path('module', 'barcodes') . '/templates';
   }
-
   return $items;
-}
-
-/**
- * Custom preprocess function.
- */
-function barcodes_preprocess_barcode(&$variables) {
-  // Instantiate the barcode class.
-  $barcode = new \Com\Tecnick\Barcode\Barcode();
-
-  // Generate a barcode.
-  $bobj = $barcode->getBarcodeObj(
-    // Barcode type and additional comma-separated parameters.
-    $variables['type'],
-    // Data string to encode.
-    $variables['value'],
-    // Bar height (use absolute or negative value as multiplication factor).
-    $variables['height'],
-    // Bar width (use absolute or negative value as multiplication factor).
-    $variables['width'],
-    // Foreground color.
-    $variables['color'],
-    // Padding (use absolute or negative values as multiplication factors).
-    array(-2, -2, -2, -2)
-    // Background color.
-    )->setBackgroundColor($variables['background_color']);
-
-  // Output the barcode as format (see other output formats
-  // in the documentation and examples).
-  // TODO return other format available.
-  return $bobj->getPng();
-
 }

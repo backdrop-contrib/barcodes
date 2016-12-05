@@ -19,9 +19,14 @@
  * @ingroup themeable
  */
 ?>
-<div class="barcode barcode-c128a">
+<div class="barcode barcode-<?php print strtolower(str_replace('+', 'plus', $type)); ?>">
   <div class="code"><?php print $svg; ?></div>
-    <?php if ($show_value): ?>
-<div class="value"><?php print $value; ?></div>
-    <?php endif; ?>
+  <?php if ($show_value): ?>
+  <div class="value">
+    <span class="slice slice-one"><?php print substr($value, 0, 1) ?></span>
+    <span class="slice slice-two"><?php print substr($value, 1, 6) ?></span>
+    <span class="slice slice-three"><?php print substr($value, 7, 6) ?></span>
+    <span class="slice quiet-zone">></span>
+  </div>
+  <?php endif; ?>
 </div>

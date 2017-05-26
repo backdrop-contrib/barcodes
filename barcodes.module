@@ -34,10 +34,12 @@ function barcodes_block_configure($delta = '') {
       '#title' => t('Value'),
       '#description' => t('The Barcode value.'),
       '#default_value' => variable_get('barcodes_value', ''),
-      '#element_validate' => array('token_element_validate'),
-      '#token_types' => array(),
     ];
     if (module_exists('token')) {
+      $form['settings']['value'] = [
+        '#element_validate' => array('token_element_validate'),
+        '#token_types' => array(),
+      ];
       $form['settings']['token_help'] = [
         '#theme' => 'token_tree_link',
         '#token_types' => [],

@@ -346,7 +346,14 @@ function barcodes_field_formatter_view($entity_type, $entity, $field, $instance,
         $suffix = str_replace(
           '+', 'plus', strtolower($settings['type'])
         );
-        $value = $item['value'];
+
+        if (!isset($item['value'])) {
+          $value = $item['url'];
+        }
+        else {
+          $value = $item['value'];
+        }
+
         if (module_exists('token')) {
           $value = token_replace($value);
         }

@@ -36,7 +36,7 @@ function barcodes_block_configure($delta = '') {
       '#default_value' => variable_get('barcodes_value', ''),
     ];
     if (module_exists('token')) {
-      $form['settings']['value'] = [
+      $form['settings']['value'] += [
         '#element_validate' => array('token_element_validate'),
         '#token_types' => array(),
       ];

@@ -5,6 +5,92 @@
  * Contains barcodes.module.
  */
 
+ /**
+ * Implements hook_autoload_info().
+ */
+function barcodes_autoload_info(){
+  return array(
+    'Com\Tecnick\Barcode\Barcode' => 'libraries/Tecnick/Barcode/Barcode.php',
+    'Com\Tecnick\Barcode\Exception' => 'libraries/Tecnick/Barcode/Exception.php',
+    'Com\Tecnick\Barcode\Type' => 'libraries/Tecnick/Barcode/Type.php',
+    'Com\Tecnick\Barcode\Type\Convert' => 'libraries/Tecnick/Barcode/Type/Convert.php',
+    'Com\Tecnick\Barcode\Type\Linear' => 'libraries/Tecnick/Barcode/Type/Linear.php',
+    'Com\Tecnick\Barcode\Type\Raw' => 'libraries/Tecnick/Barcode/Type/Raw.php',
+    'Com\Tecnick\Barcode\Type\Square' => 'libraries/Tecnick/Barcode/Type/Square.php',
+    'Com\Tecnick\Barcode\Type\Linear\Codabar' => 'libraries/Tecnick/Barcode/Type/Linear/Codabar.php',
+    'Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight' => 'libraries/Tecnick/Barcode/Type/Linear/CodeOneTwoEight.php',
+    'Com\Tecnick\Barcode\Type\Linear\CodeThreeNine' => 'libraries/Tecnick/Barcode/Type/Linear/CodeThreeNine.php',
+    'Com\Tecnick\Barcode\Type\Linear\EanTwo' => 'libraries/Tecnick/Barcode/Type/Linear/EanTwo.php',
+    'Com\Tecnick\Barcode\Type\Linear\InterleavedTwoOfFive' => 'libraries/Tecnick/Barcode/Type/Linear/InterleavedTwoOfFive.php',
+    'Com\Tecnick\Barcode\Type\Linear\Pharma' => 'libraries/Tecnick/Barcode/Type/Linear/Pharma.php',
+    'Com\Tecnick\Barcode\Type\Linear\Raw' => 'libraries/Tecnick/Barcode/Type/Linear/Raw.php',
+    'Com\Tecnick\Barcode\Type\Linear\UpcA' => 'libraries/Tecnick/Barcode/Type/Linear/UpcA.php',
+    'Com\Tecnick\Barcode\Type\Linear\CodeNineThree' => 'libraries/Tecnick/Barcode/Type/Linear/CodeNineThree.php',
+    'Com\Tecnick\Barcode\Type\Linear\CodeThreeNineCheck' => 'libraries/Tecnick/Barcode/Type/Linear/CodeThreeNineCheck.php',
+    'Com\Tecnick\Barcode\Type\Linear\EanEight' => 'libraries/Tecnick/Barcode/Type/Linear/EanEight.php',
+    'Com\Tecnick\Barcode\Type\Linear\Imb' => 'libraries/Tecnick/Barcode/Type/Linear/Imb.php',
+    'Com\Tecnick\Barcode\Type\Linear\KlantIndex' => 'libraries/Tecnick/Barcode/Type/Linear/KlantIndex.php',
+    'Com\Tecnick\Barcode\Type\Linear\PharmaTwoTracks' => 'libraries/Tecnick/Barcode/Type/Linear/PharmaTwoTracks.php',
+    'Com\Tecnick\Barcode\Type\Linear\RoyalMailFourCc' => 'libraries/Tecnick/Barcode/Type/Linear/RoyalMailFourCc.php',
+    'Com\Tecnick\Barcode\Type\Linear\UpcE' => 'libraries/Tecnick/Barcode/Type/Linear/UpcE.php',
+    'Com\Tecnick\Barcode\Type\Linear\CodeOneOne' => 'libraries/Tecnick/Barcode/Type/Linear/CodeOneOne.php',
+    'Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExtCheck' => 'libraries/Tecnick/Barcode/Type/Linear/CodeThreeNineExtCheck.php',
+    'Com\Tecnick\Barcode\Type\Linear\EanFive' => 'libraries/Tecnick/Barcode/Type/Linear/EanFive.php',
+    'Com\Tecnick\Barcode\Type\Linear\ImbPre' => 'libraries/Tecnick/Barcode/Type/Linear/ImbPre.php',
+    'Com\Tecnick\Barcode\Type\Linear\MsiCheck' => 'libraries/Tecnick/Barcode/Type/Linear/MsiCheck.php',
+    'Com\Tecnick\Barcode\Type\Linear\Planet' => 'libraries/Tecnick/Barcode/Type/Linear/Planet.php',
+    'Com\Tecnick\Barcode\Type\Linear\StandardTwoOfFiveCheck' => 'libraries/Tecnick/Barcode/Type/Linear/StandardTwoOfFiveCheck.php',
+    'Com\Tecnick\Barcode\Type\Linear\CodeThreeNineExt' => 'libraries/Tecnick/Barcode/Type/Linear/CodeThreeNineExt.php',
+    'Com\Tecnick\Barcode\Type\Linear\EanOneThree' => 'libraries/Tecnick/Barcode/Type/Linear/EanOneThree.php',
+    'Com\Tecnick\Barcode\Type\Linear\InterleavedTwoOfFiveCheck' => 'libraries/Tecnick/Barcode/Type/Linear/InterleavedTwoOfFiveCheck.php',
+    'Com\Tecnick\Barcode\Type\Linear\Msi' => 'libraries/Tecnick/Barcode/Type/Linear/Msi.php',
+    'Com\Tecnick\Barcode\Type\Linear\Postnet' => 'libraries/Tecnick/Barcode/Type/Linear/Postnet.php',
+    'Com\Tecnick\Barcode\Type\Linear\StandardTwoOfFive' => 'libraries/Tecnick/Barcode/Type/Linear/StandardTwoOfFive.php',
+    'Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\CodeOneTwoEightA' => 'libraries/Tecnick/Barcode/Type/Linear/CodeOneTwoEight/CodeOneTwoEightA.php',
+    'Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\CodeOneTwoEightB' => 'libraries/Tecnick/Barcode/Type/Linear/CodeOneTwoEight/CodeOneTwoEightB.php',
+    'Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\CodeOneTwoEightC' => 'libraries/Tecnick/Barcode/Type/Linear/CodeOneTwoEight/CodeOneTwoEightC.php',
+    'Com\Tecnick\Barcode\Type\Linear\CodeOneTwoEight\Process' => 'libraries/Tecnick/Barcode/Type/Linear/CodeOneTwoEight/Process.php',
+    'Com\Tecnick\Barcode\Type\Square\Datamatrix' => 'libraries/Tecnick/Barcode/Type/Square/Datamatrix.php',
+    'Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven' => 'libraries/Tecnick/Barcode/Type/Square/PdfFourOneSeven.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode' => 'libraries/Tecnick/Barcode/Type/Square/QrCode.php',
+    'Com\Tecnick\Barcode\Type\Square\Raw' => 'libraries/Tecnick/Barcode/Type/Square/Raw.php',
+    'Com\Tecnick\Barcode\Type\Square\Datamatrix\Data' => 'libraries/Tecnick/Barcode/Type/Square/Datamatrix/Data.php',
+    'Com\Tecnick\Barcode\Type\Square\Datamatrix\Encode' => 'libraries/Tecnick/Barcode/Type/Square/Datamatrix/Encode.php',
+    'Com\Tecnick\Barcode\Type\Square\Datamatrix\EncodeTxt' => 'libraries/Tecnick/Barcode/Type/Square/Datamatrix/EncodeTxt.php',
+    'Com\Tecnick\Barcode\Type\Square\Datamatrix\ErrorCorrection' => 'libraries/Tecnick/Barcode/Type/Square/Datamatrix/ErrorCorrection.php',
+    'Com\Tecnick\Barcode\Type\Square\Datamatrix\Modes' => 'libraries/Tecnick/Barcode/Type/Square/Datamatrix/Modes.php',
+    'Com\Tecnick\Barcode\Type\Square\Datamatrix\Placement' => 'libraries/Tecnick/Barcode/Type/Square/Datamatrix/Placement.php',
+    'Com\Tecnick\Barcode\Type\Square\Datamatrix\Steps' => 'libraries/Tecnick/Barcode/Type/Square/Datamatrix/Steps.php',
+    'Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Compaction' => 'libraries/Tecnick/Barcode/Type/Square/PdfFourOneSeven/Compaction.php',
+    'Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Data' => 'libraries/Tecnick/Barcode/Type/Square/PdfFourOneSeven/Data.php',
+    'Com\Tecnick\Barcode\Type\Square\PdfFourOneSeven\Sequence' => 'libraries/Tecnick/Barcode/Type/Square/PdfFourOneSeven/Sequence.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode\ByteStream' => 'libraries/Tecnick/Barcode/Type/Square/QrCode/ByteStream.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode\Data' => 'libraries/Tecnick/Barcode/Type/Square/QrCode/Data.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode\Encode' => 'libraries/Tecnick/Barcode/Type/Square/QrCode/Encode.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode\Encoder' => 'libraries/Tecnick/Barcode/Type/Square/QrCode/Encoder.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode\EncodingMode' => 'libraries/Tecnick/Barcode/Type/Square/QrCode/EncodingMode.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode\Estimate' => 'libraries/Tecnick/Barcode/Type/Square/QrCode/Estimate.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode\Init' => 'libraries/Tecnick/Barcode/Type/Square/QrCode/Init.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode\InputItem' => 'libraries/Tecnick/Barcode/Type/Square/QrCode/InputItem.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode\MaskNum' => 'libraries/Tecnick/Barcode/Type/Square/QrCode/MaskNum.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode\Mask' => 'libraries/Tecnick/Barcode/Type/Square/QrCode/Mask.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode\Spec' => 'libraries/Tecnick/Barcode/Type/Square/QrCode/Spec.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode\SpecRs' => 'libraries/Tecnick/Barcode/Type/Square/QrCode/SpecRs.php',
+    'Com\Tecnick\Barcode\Type\Square\QrCode\Split' => 'libraries/Tecnick/Barcode/Type/Square/QrCode/Split.php',
+    'Com\Tecnick\Color\Css' => 'libraries/Tecnick/Color/Css.php',
+    'Com\Tecnick\Color\Model' => 'libraries/Tecnick/Color/Model.php',
+    'Com\Tecnick\Color\Exception' => 'libraries/Tecnick/Color/Exception.php',
+    'Com\Tecnick\Color\Pdf' => 'libraries/Tecnick/Color/Pdf.php',
+    'Com\Tecnick\Color\Spot' => 'libraries/Tecnick/Color/Spot.php',
+    'Com\Tecnick\Color\Web' => 'libraries/Tecnick/Color/Web.php',
+    'Com\Tecnick\Color\Model\Cmyk' => 'libraries/Tecnick/Color/Model/Cmyk.php',
+    'Com\Tecnick\Color\Model\Gray' => 'libraries/Tecnick/Color/Model/Gray.php',
+    'Com\Tecnick\Color\Model\Hsl' => 'libraries/Tecnick/Color/Model/Hsl.php',
+    'Com\Tecnick\Color\Model\Rgb' => 'libraries/Tecnick/Color/Model/Rgb.php',
+    'Com\Tecnick\Color\Model\Template' => 'libraries/Tecnick/Color/Model/Template.php',
+  );
+}
+
 use Com\Tecnick\Barcode\Barcode as BarcodeGenerator;
 
 /**
@@ -13,7 +99,7 @@ use Com\Tecnick\Barcode\Barcode as BarcodeGenerator;
 function barcodes_block_info() {
   $blocks['barcode'] = array(
     'info' => t('Barcode'),
-    'cache' => DRUPAL_CACHE_PER_PAGE,
+    'cache' => BACKDROP_CACHE_PER_PAGE,
   );
   return $blocks;
 }
@@ -154,7 +240,7 @@ function barcodes_block_view($delta = '') {
         '#theme' => 'barcode__' . $suffix,
         '#attached' => array(
           'css' => array(
-            drupal_get_path('module', 'barcodes') . '/css/' . $suffix . '.css',
+            backdrop_get_path('module', 'barcodes') . '/css/' . $suffix . '.css',
           ),
         ),
         '#type' => variable_get('barcodes_type', 'QRCODE'),
@@ -431,14 +517,14 @@ function barcodes_theme($existing, $type, $theme, $path) {
   $items = array();
   $items['barcode'] = $barcode;
   $items['barcode']['template'] = 'barcode';
-  $items['barcode']['path'] = drupal_get_path('module', 'barcodes') . '/templates';
+  $items['barcode']['path'] = backdrop_get_path('module', 'barcodes') . '/templates';
   foreach ($generator->getTypes() as $type) {
     $suffix = str_replace(
       '+', 'plus', strtolower($type)
     );
     $items['barcode__' . strtolower($type)] = $barcode;
     $items['barcode__' . strtolower($type)]['template'] = 'barcode--' . $suffix;
-    $items['barcode__' . strtolower($type)]['path'] = drupal_get_path('module', 'barcodes') . '/templates';
+    $items['barcode__' . strtolower($type)]['path'] = backdrop_get_path('module', 'barcodes') . '/templates';
   }
   return $items;
 }

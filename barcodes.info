@@ -1,3 +1,9 @@
 name = Barcodes
 description = Generate barcodes
-core = 7.x
+type = module
+backdrop = 1.x
+package = Fields
+
+tags[] = Content
+tags[] = Fields
+tags[] = Appearance

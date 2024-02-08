@@ -58,11 +58,11 @@ Additional documentation is located in [the Wiki](https://github.com/backdrop-co
 Bugs and feature requests should be reported in [the Issue Queue](https://github.com/backdrop-contrib/barcodes/issues).
 
 ## Current Maintainers
-- [Martin Price](https://github.com/yorkshire-pudding) - [System Horizons](https://www.systemhorizons.co.uk)
-- Seeking additional maintainers.
+- [Martin Price](https://github.com/yorkshire-pudding) - [System Horizons Ltd](https://www.systemhorizons.co.uk)
+- Collaboration and co-maintainers welcome!
 
 ## Credits
-- Ported to Backdrop CMS by [Martin Price](https://github.com/yorkshire-pudding) - [System Horizons](https://www.systemhorizons.co.uk).
+- Ported to Backdrop CMS by [Martin Price](https://github.com/yorkshire-pudding) - [System Horizons Ltd](https://www.systemhorizons.co.uk).
 - Originally written for Drupal by [Stefan Auditor](https://www.drupal.org/u/sanduhrs).
 - This project includes the [tc-lib-barcode](https://github.com/tecnickcom/tc-lib-barcode) and [tc-lib-color](https://github.com/tecnickcom/tc-lib-color) libraries written by [Nicola Asuni](https://github.com/nicolaasuni) - [Tecnick.com Ltd](https://github.com/tecnickcom).
 
